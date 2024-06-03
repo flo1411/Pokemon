@@ -1,0 +1,23 @@
+
+k
+;app/src/main/java/com/example/pokemon/network/ApiService.kt,8/d/8d184c1335a864a2630150661f5f533b45701212
+@
+build.gradle.kts,d/b/dbcff70658daf80b53ce624f6adcaa529df5ed8d
+D
+app/build.gradle.kts,d/2/d2a4383452aad84a18429a5844d31330a012a9e6
+I
+gradle/libs.versions.toml,d/7/d7595319a0658be6f1ed500ad590d42e4b28bc4f
+i
+9app/src/main/java/com/example/pokemon/di/NetworkModule.kt,f/2/f2b16c7b0f4de6c419ee66187dd990305536814f
+f
+6app/src/main/java/com/example/pokemon/MainViewModel.kt,8/5/85e274c7cb57c9d71328b6161cfe59dbd083f8aa
+f
+6app/src/main/java/com/example/pokemon/model/Pokemon.kt,f/f/ff6810fc735152848eb31ddb875664357ddca4b3
+g
+7app/src/main/java/com/example/pokemon/model/ApiState.kt,a/a/aa6ef06d40c8db43a80c4238cb145ab3e6c6fa65
+e
+5app/src/main/java/com/example/pokemon/MainActivity.kt,6/c/6c06a6ddd71c1b6ee73427eb19f02b907076e9c2
+P
+ app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
+k
+;app/src/main/java/com/example/pokemon/PokemonApplication.kt,a/8/a83f023b1a8348557d6ef6bd2e23f2af96976eb3
