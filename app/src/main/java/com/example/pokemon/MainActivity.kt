@@ -11,6 +11,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PokemonList(viewModel: MainViewModel) {
-    val pokemonState = viewModel.users.collectAsState()
+    val pokemonState = viewModel.pokemon.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchPokemon()
+    }
 
     when (pokemonState.value) {
         is ApiState.Loading -> CircularProgressIndicator(modifier = Modifier)

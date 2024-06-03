@@ -21,3 +21,5 @@ P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 k
 ;app/src/main/java/com/example/pokemon/PokemonApplication.kt,a/8/a83f023b1a8348557d6ef6bd2e23f2af96976eb3
+n
+>app/src/main/java/com/example/pokemon/model/PokemonResponse.kt,c/a/ca775ddad43a03b07b0c977fd1919aa6c9126d61
