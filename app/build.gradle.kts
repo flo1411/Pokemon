@@ -3,16 +3,17 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlinAndroidKapt)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.example.pokemon"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.pokemon"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.converter)
     implementation(libs.gson)
     implementation(libs.hilt.android)
+    implementation(libs.coil.compose)
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

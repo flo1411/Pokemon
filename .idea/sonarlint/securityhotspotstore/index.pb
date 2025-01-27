@@ -23,3 +23,7 @@ k
 ;app/src/main/java/com/example/pokemon/PokemonApplication.kt,a/8/a83f023b1a8348557d6ef6bd2e23f2af96976eb3
 n
 >app/src/main/java/com/example/pokemon/model/PokemonResponse.kt,c/a/ca775ddad43a03b07b0c977fd1919aa6c9126d61
+g
+7app/src/main/java/com/example/pokemon/ui/theme/Theme.kt,f/5/f573243a0f3f839b4aaf65f2b702a527b491225f
+n
+>app/src/main/java/com/example/pokemon/PokemonDetailFragment.kt,7/8/788a28b36305c3a1c47761976b5c648f07fa32d9
