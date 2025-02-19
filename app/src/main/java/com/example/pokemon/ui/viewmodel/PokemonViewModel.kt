@@ -1,10 +1,9 @@
-package com.example.pokemon
+package com.example.pokemon.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.ErrorCodes
-import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
 import com.example.pokemon.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
+class PokemonViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
     private val _pokemon = MutableStateFlow<ApiState<PokemonResponse>>(ApiState.Loading)
     val pokemon = _pokemon.asStateFlow()
 
