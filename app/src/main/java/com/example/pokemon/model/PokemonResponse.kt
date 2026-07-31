@@ -6,5 +6,7 @@ data class PokemonResponse (
     @SerializedName("count")
     val count: Int?,
     @SerializedName("results")
-    val pokemon: List<Pokemon>?
+    val pokemon: List<Pokemon>?,
+    @SerializedName("next")
+    val next: String?
 )

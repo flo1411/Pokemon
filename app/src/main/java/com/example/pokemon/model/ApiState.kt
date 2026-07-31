@@ -7,7 +7,7 @@ sealed class ApiState<out T> {
 
     // you can pass if the error network error or not and pass custom
     // error code to handle any custom exception with it as you see error body it Any
-    // so you can pass any thing and cast it
+    // so you can pass anything and cast it
     data class Failure(
         val isNetworkError: Boolean,
         val errorCode: ErrorCodes?,

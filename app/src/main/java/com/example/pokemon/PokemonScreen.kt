@@ -70,8 +70,8 @@ fun PokemonApp(
         ) {
             composable(route = PokemonScreen.Start.name) {
                 PokemonListScreen(
+                    modifier = Modifier.fillMaxSize(),
                     viewModel,
-                    modifier = Modifier.fillMaxSize().padding(innerPadding),
                     onPokemonClicked = { navController.navigate(PokemonScreen.Detail.name) })
             }
             composable(route = PokemonScreen.Detail.name) {
