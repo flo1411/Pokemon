@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CardDefaults
@@ -30,13 +29,12 @@ import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
 import com.example.pokemon.ui.viewmodel.PokemonViewModel
-import com.example.pokemon.utils.isTrue
 
 @Composable
 fun PokemonListScreen(
     modifier: Modifier = Modifier,
     viewModel: PokemonViewModel = viewModel(),
-    onPokemonClicked: (String) -> Unit
+    onPokemonClicked: (Pokemon) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -66,7 +64,7 @@ fun PokemonListScreen(
 fun SetupPokemonList(
     response: PokemonResponse,
     modifier: Modifier,
-    onPokemonClicked: (String) -> Unit,
+    onPokemonClicked: (Pokemon) -> Unit,
     viewModel: PokemonViewModel
 ) {
 
@@ -85,6 +83,7 @@ fun SetupPokemonList(
             viewModel.loadMorePokemon()
         }
     }
+    val isLoadingMore by viewModel.isLoadingMore.collectAsState()
 
     LazyColumn(
         modifier.padding(
@@ -92,27 +91,27 @@ fun SetupPokemonList(
         ),
         state = listState
     ) {
-        /*
-        items(
-            response.pokemon.orEmpty(),
-            key = { item -> item.name ?: (1..10000).random() }) { pokemonItem ->
-            PokemonCard(pokemonItem, onPokemonClicked)
-        }
-
-         */
-
         itemsIndexed(
             items = response.pokemon.orEmpty(),
             key = { _, item -> item.name.orEmpty() }
         ) { index, pokemonItem ->
             PokemonCard(pokemonItem, index, onPokemonClicked)
-            // index is 0-based position in the list
+        }
+
+        if (isLoadingMore) {
+            item {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (String) -> Unit) {
+fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (Pokemon) -> Unit) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -125,11 +124,11 @@ fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (String) -> Unit
                 horizontal = 8.dp,
                 vertical = 4.dp,
             )
-            .clickable { onPokemonClicked.invoke(pokemon.name.orEmpty()) }
+            .clickable { onPokemonClicked(pokemon) }
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "#" + index + " " + pokemon.name.orEmpty(),
+                text = "#" + (index + 1) + " " + pokemon.name.orEmpty(),
                 modifier = Modifier
                     .padding(16.dp),
                 textAlign = TextAlign.Center,
