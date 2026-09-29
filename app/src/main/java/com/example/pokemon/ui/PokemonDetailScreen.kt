@@ -1,21 +1,28 @@
 package com.example.pokemon.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonDetailResponse
 import com.example.pokemon.model.PokemonResponse
+import com.example.pokemon.ui.theme.CardYellow
 import com.example.pokemon.ui.viewmodel.PokemonDetailViewModel
 
 @Composable
@@ -49,9 +56,26 @@ fun PokemonDetailScreen(
 }
 
 @Composable
-fun SetupPokemonDetailScreen(pokemonResponse: PokemonDetailResponse, modifier: Modifier, viewModel: PokemonDetailViewModel) {
+fun SetupPokemonDetailScreen(
+    pokemonResponse: PokemonDetailResponse,
+    modifier: Modifier,
+    viewModel: PokemonDetailViewModel
+) {
     Box(
         Modifier
-            .background(Color(0xFFD4C86E))
+            .background(Color.LightGray)
             .fillMaxSize()
-    ) {}}
+            .padding(20.dp)
+    )
+    {
+        val cardShape = RoundedCornerShape(15.dp)
+        Box(
+            Modifier
+                .fillMaxSize()
+                .border(1.dp, Color.DarkGray, cardShape)
+                //.shadow(2.dp, cardShape)
+                .clip(cardShape)
+                .background(CardYellow)
+        ) {}
+    }
+}

@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
+import com.example.pokemon.ui.theme.CardYellow
 import com.example.pokemon.ui.viewmodel.PokemonViewModel
 
 @Composable
@@ -116,7 +117,7 @@ fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (Pokemon) -> Uni
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFD4C86E)),
+        colors = CardDefaults.cardColors(containerColor = CardYellow),
         modifier = Modifier
             .fillMaxWidth(1f)
             .height(100.dp)
