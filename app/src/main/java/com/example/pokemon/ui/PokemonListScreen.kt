@@ -1,5 +1,6 @@
 package com.example.pokemon.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,16 +11,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -29,12 +38,12 @@ import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonResponse
 import com.example.pokemon.ui.theme.CardYellow
-import com.example.pokemon.ui.viewmodel.PokemonViewModel
+import com.example.pokemon.ui.viewmodel.PokemonListViewModel
 
 @Composable
 fun PokemonListScreen(
     modifier: Modifier = Modifier,
-    viewModel: PokemonViewModel = viewModel(),
+    viewModel: PokemonListViewModel = viewModel(),
     onPokemonClicked: (Pokemon) -> Unit
 ) {
     Column(
@@ -66,8 +75,41 @@ fun SetupPokemonList(
     response: PokemonResponse,
     modifier: Modifier,
     onPokemonClicked: (Pokemon) -> Unit,
-    viewModel: PokemonViewModel
+    viewModel: PokemonListViewModel
 ) {
+    val searchTextState = rememberTextFieldState()
+    TextField(
+        state = searchTextState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 4.dp,
+            )
+            .border(1.dp, color = Color.Gray, shape = RoundedCornerShape(50.dp)),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search"
+            )
+        },
+        placeholder = { Text("Search") },
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent,
+        )
+    )
+    LaunchedEffect(searchTextState) {
+        snapshotFlow {
+            searchTextState.text.toString()
+        }.collect { viewModel.searchPokemon(it) }
+    }
 
     val listState = rememberLazyListState()
 

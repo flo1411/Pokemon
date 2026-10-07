@@ -8,19 +8,42 @@ import com.example.pokemon.model.ErrorCodes
 import com.example.pokemon.model.PokemonResponse
 import com.example.pokemon.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.http.Query
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
+class PokemonListViewModel @Inject constructor(private val apiService: ApiService) : ViewModel() {
     private val _pokemon = MutableStateFlow<ApiState<PokemonResponse>>(ApiState.Loading)
-    val pokemon = _pokemon.asStateFlow()
+    private val query = MutableStateFlow("")
+
+    @OptIn(FlowPreview::class)
+    val pokemon: StateFlow<ApiState<PokemonResponse>> = combine(
+        _pokemon,
+        query.debounce { text -> if (text.length < 3) 0L else 300L }.distinctUntilChanged()
+    ) { state, queryText ->
+        filterByQuery(state, queryText)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ApiState.Loading
+    )
 
     private val _isLoadingMore = MutableStateFlow(false)
     val isLoadingMore = _isLoadingMore.asStateFlow()
+
+    fun searchPokemon(query: String) {
+        this.query.value = query
+    }
+
 
     fun fetchPokemon() {
         viewModelScope.launch {
@@ -44,7 +67,7 @@ class PokemonViewModel @Inject constructor(private val apiService: ApiService) :
     }
 
     private suspend fun loadPage(limit: Int? = null, offset: Int? = null, append: Boolean = false) {
-        if (append)_isLoadingMore.emit(true)
+        if (append) _isLoadingMore.emit(true)
         else _pokemon.value = ApiState.Loading
 
         try {
@@ -70,5 +93,16 @@ class PokemonViewModel @Inject constructor(private val apiService: ApiService) :
         } finally {
             _isLoadingMore.emit(false)
         }
+    }
+
+    private fun filterByQuery(
+        state: ApiState<PokemonResponse>,
+        queryText: String
+    ): ApiState<PokemonResponse> {
+        if (queryText.length < 3 || state !is ApiState.Success) return state
+        val filtered = state.value.pokemon.orEmpty().filter { pokemon ->
+            pokemon.name.orEmpty().contains(queryText, ignoreCase = true)
+        }
+        return state.copy(value = state.value.copy(pokemon = filtered))
     }
 }

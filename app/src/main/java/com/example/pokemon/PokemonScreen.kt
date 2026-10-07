@@ -30,7 +30,7 @@ import com.example.pokemon.ui.PokemonDetailScreen
 import com.example.pokemon.ui.PokemonListScreen
 import com.example.pokemon.ui.theme.PokemonTheme
 import com.example.pokemon.ui.viewmodel.PokemonDetailViewModel
-import com.example.pokemon.ui.viewmodel.PokemonViewModel
+import com.example.pokemon.ui.viewmodel.PokemonListViewModel
 import com.google.gson.Gson
 
 /**
@@ -45,7 +45,7 @@ private val gson = Gson()
 
 @Composable
 fun PokemonApp(
-    viewModel: PokemonViewModel = viewModel(),
+    viewModel: PokemonListViewModel = viewModel(),
     detailViewModel: PokemonDetailViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
