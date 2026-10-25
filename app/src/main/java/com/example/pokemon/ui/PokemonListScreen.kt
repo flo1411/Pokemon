@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -35,7 +35,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -87,6 +86,59 @@ fun SetupPokemonList(
     onPokemonClicked: (Pokemon) -> Unit,
     viewModel: PokemonListViewModel
 ) {
+    SetupSearchBar(viewModel)
+
+    if (response.pokemon.isNullOrEmpty()) {
+        return
+    }
+
+    val listState = rememberLazyListState()
+
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 &&
+                    lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - 1
+        }
+    }
+
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) {
+            viewModel.loadMorePokemon()
+        }
+    }
+    val isLoadingMore by viewModel.isLoadingMore.collectAsState()
+
+    LazyColumn(
+        modifier.padding(
+            8.dp
+        ),
+        state = listState
+    ) {
+        items(
+            items = response.pokemon.orEmpty(),
+            key = { item -> item.name.orEmpty() }
+        ) { pokemonItem ->
+            PokemonCard(pokemonItem, onPokemonClicked)
+        }
+
+        if (isLoadingMore) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SetupSearchBar(viewModel: PokemonListViewModel) {
     val searchTextState = rememberTextFieldState()
     TextField(
         state = searchTextState,
@@ -120,54 +172,10 @@ fun SetupPokemonList(
             searchTextState.text.toString()
         }.collect { viewModel.searchPokemon(it) }
     }
-
-    val listState = rememberLazyListState()
-
-    val reachedBottom: Boolean by remember {
-        derivedStateOf {
-            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem?.index != 0 &&
-                    lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - 1
-        }
-    }
-
-    LaunchedEffect(reachedBottom) {
-        if (reachedBottom) {
-            viewModel.loadMorePokemon()
-        }
-    }
-    val isLoadingMore by viewModel.isLoadingMore.collectAsState()
-
-    LazyColumn(
-        modifier.padding(
-            8.dp
-        ),
-        state = listState
-    ) {
-        itemsIndexed(
-            items = response.pokemon.orEmpty(),
-            key = { _, item -> item.name.orEmpty() }
-        ) { index, pokemonItem ->
-            PokemonCard(pokemonItem, index, onPokemonClicked)
-        }
-
-        if (isLoadingMore) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
-    }
 }
 
 @Composable
-fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (Pokemon) -> Unit) {
+fun PokemonCard(pokemon: Pokemon, onPokemonClicked: (Pokemon) -> Unit) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -184,7 +192,7 @@ fun PokemonCard(pokemon: Pokemon, index: Int, onPokemonClicked: (Pokemon) -> Uni
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "#" + (index + 1) + " " + pokemon.name.orEmpty(),
+                text = "#" + pokemon.number + " " + pokemon.name.orEmpty(),
                 modifier = Modifier
                     .padding(16.dp),
                 textAlign = TextAlign.Center,

@@ -7,4 +7,7 @@ data class Pokemon(
     val name: String?,
     @SerializedName("url")
     val url: String?
-)
+) {
+    val number: String
+        get() = url.orEmpty().trimEnd('/').substringAfterLast('/')
+}

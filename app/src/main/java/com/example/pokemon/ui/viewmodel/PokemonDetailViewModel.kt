@@ -8,6 +8,7 @@ import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonDetailResponse
 import com.example.pokemon.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,8 @@ class PokemonDetailViewModel @Inject constructor(private val apiService: ApiServ
             try {
                 val response = apiService.getPokemonDetails(pokemon.url)
                 _pokemon.emit(ApiState.Success(response))
+            } catch (cancellationException: CancellationException) {
+                throw cancellationException
             } catch (e: Exception) {
                 _pokemon.emit(
                     ApiState.Failure(

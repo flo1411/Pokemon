@@ -5,7 +5,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.pokemon.model.ApiState
 import com.example.pokemon.model.Pokemon
 import com.example.pokemon.model.PokemonDetailResponse
 import com.example.pokemon.model.PokemonResponse
 import com.example.pokemon.ui.theme.CardYellow
 import com.example.pokemon.ui.viewmodel.PokemonDetailViewModel
+import com.example.pokemon.utils.isTrue
+import java.math.BigDecimal
 
 @Composable
 fun PokemonDetailScreen(
@@ -50,6 +58,7 @@ fun PokemonDetailScreen(
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(40.dp))
             }
+
             is ApiState.Success -> SetupPokemonDetailScreen(
                 (pokemonState.value as ApiState.Success<PokemonDetailResponse>).value,
                 modifier,
@@ -83,6 +92,45 @@ fun SetupPokemonDetailScreen(
                 //.shadow(2.dp, cardShape)
                 .clip(cardShape)
                 .background(CardYellow)
-        ) {}
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = pokemonResponse.name.orEmpty(),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold
+                )
+                val frontDefault = pokemonResponse.sprites?.frontDefault
+                if (frontDefault?.isNotEmpty().isTrue) {
+                    AsyncImage(
+                        model = frontDefault,
+                        contentDescription = pokemonResponse.name,
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .size(180.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                pokemonResponse.types?.let {
+                    it.forEach { type ->
+                        //get images for type of Pokemon
+                        type.type?.url
+                    }
+                }
+                pokemonResponse.forms.let {
+                    it?.forEach { form ->
+
+
+                    }
+                }
+            }
+
+
+        }
     }
 }
